@@ -8,7 +8,7 @@ run_analysis.R.
 
 The run_analysis.R script returns a comma-delimited file: "project_summary.txt"
 
-This summary file contains group averages by subject and activity of all the measurement variables, as specified in the assignment.  Descriptions of the variables in this file, as well as data processing and transformation steps taken, may be found in the markdown file:
+This summary file contains group averages by subject and activity of all the measurement variables, as specified in the assignment.  Descriptions of the variables in this file may be found in the markdown file:
 CodeBook.md.   
 
 The data processing steps (and corresponding R code) are described below:
