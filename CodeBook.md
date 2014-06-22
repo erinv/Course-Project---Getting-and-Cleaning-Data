@@ -1,7 +1,7 @@
 CodeBook
 ========================================================
 
-The file "project_summary.csv" contains the group average of motion measurement variables collected using Samsung smartphones.  As specified in the assignment instructions, groups were defined as combinations of 6 activities and 30 test subjects.  Thus, the 10,299 motion observations in the original data were combined into 180 rows with the means of 79 motion measurement variables. 
+The file "project_summary.txt" contains the group average of motion measurement variables collected using Samsung smartphones.  As specified in the assignment instructions, groups were defined as combinations of 6 activities and 30 test subjects.  Thus, the 10,299 motion observations in the original data were combined into 180 rows with the means of 79 motion measurement variables. 
 
 The first section of this markdown document describes data processing and transformations.  The second section descries the variable (column) names and values.
 
