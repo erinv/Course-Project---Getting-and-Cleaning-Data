@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<!-- saved from url=(0014)about:internet -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=9" >
+
+<title>CodeBook</title>
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+
+</style>
+
+
+
+
+
+</head>
+
+<body>
+<h1>CodeBook</h1>
+
+<p>The file &ldquo;project_summary.csv&rdquo; contains the group average of motion measurement variables collected using Samsung smartphones.  As specified in the assignment instructions, groups were defined as combinations of 6 activities and 30 test subjects.  Thus, the 10,299 motion observations in the original data were combined into 180 rows with the means of 79 motion measurement variables. </p>
+
+<p>The first section of this markdown document describes data processing and transformations.  The second section descries the variable (column) names and values.</p>
+
+<h2>Data Processing and Transformations</h2>
+
+<p>The data processing steps (and corresponding R code) are described below:</p>
+
+<h3>1) Download the specified data for the project and unzip the files</h3>
+
+<pre><code>    download.file(&quot;https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20   Dataset.zip&quot;, destfile=&quot;./data/20Dataset.zip&quot;, method=&quot;curl&quot;)
+    unzip(&quot;./data/20Dataset.zip&quot;)              
+</code></pre>
+
+<p>This step created a directory called UCI HAR Dataset which in turn contained the train and test data directories as well as files describing the original data collection practices.  Quoting from the orignal data&#39;s README.txt:</p>
+
+<blockquote>
+<p>The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. </p>
+
+<p>The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain. See &#39;features_info.txt&#39; for more details. </p>
+
+<p>For each record it is provided:</p>
+
+<ul>
+<li>Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.</li>
+<li>Triaxial Angular velocity from the gyroscope. </li>
+<li>A 561-feature vector with time and frequency domain variables. </li>
+<li>Its activity label. </li>
+<li>An identifier of the subject who carried out the experiment.</li>
+</ul>
+
+<p>The dataset includes the following files:</p>
+
+<ul>
+<li><p>&#39;README.txt&#39;</p></li>
+<li><p>&#39;features_info.txt&#39;: Shows information about the variables used on the feature vector.</p></li>
+<li><p>&#39;features.txt&#39;: List of all features.</p></li>
+<li><p>&#39;activity_labels.txt&#39;: Links the class labels with their activity name.</p></li>
+<li><p>&#39;train/X_train.txt&#39;: Training set.</p></li>
+<li><p>&#39;train/y_train.txt&#39;: Training labels.</p></li>
+<li><p>&#39;test/X_test.txt&#39;: Test set.</p></li>
+<li><p>&#39;test/y_test.txt&#39;: Test labels.</p></li>
+</ul>
+
+<p>The following files are available for the train and test data. Their descriptions are equivalent. </p>
+
+<ul>
+<li>&#39;train/subject_train.txt&#39;: Each row identifies the subject who performed the activity for each window sample. Its range is from 1 to 30.</li>
+</ul>
+</blockquote>
+
+<h3>2) Create a table of measurement names from the &ldquo;features.txt&rdquo; file</h3>
+
+<p>This step also creates a new &ldquo;names&rdquo; variable to make sure that the column names are &ldquo;legal&rdquo; in R.</p>
+
+<pre><code>    setwd(&quot;~/datasciencecoursera/UCI HAR Dataset&quot;)
+    features &lt;- read.table(&quot;features.txt&quot;)
+    features$names &lt;- make.names(features$V2)
+</code></pre>
+
+<h3>3) Read in activity labels from the &ldquo;activity_labels.txt&rdquo; file</h3>
+
+<pre><code>    labels &lt;- read.table(&quot;activity_labels.txt&quot;, col.names=c(&quot;activity&quot;, &quot;activity_label&quot;))
+</code></pre>
+
+<h3>4) Identify which columns in the list of motion measurements contain means or standard deviations</h3>
+
+<pre><code>    means &lt;- grep(&quot;mean&quot;, features$names)
+    stds &lt;- grep(&quot;std&quot;, features$names)
+</code></pre>
+
+<h3>5) Process the test data</h3>
+
+<pre><code>    setwd(&quot;~/datasciencecoursera/UCI HAR Dataset/test&quot;)
+
+    #Read in measurement file, subject file, and activity file
+    X_test &lt;- read.table(&quot;X_test.txt&quot;, col.names=features$names)
+    subject_test &lt;- read.table(&quot;subject_test.txt&quot;, col.names=&quot;subject&quot;)
+    y_test &lt;- read.table(&quot;y_test.txt&quot;, col.names=&quot;activity&quot;)
+
+    #Pull out columns which contain means or standard deviations from test measurements
+    testdata &lt;- X_test[, c(means, stds)]
+
+    #Combine with subject and activity data
+    testfile &lt;- cbind(subject_test, y_test, testdata)
+</code></pre>
+
+<h3>6) Process the training data</h3>
+
+<pre><code>    setwd(&quot;~/datasciencecoursera/UCI HAR Dataset/train&quot;)
+
+    #Read in measurement file, subject file, and activity file
+    X_train &lt;- read.table(&quot;X_train.txt&quot;, col.names=features$names)
+    subject_train &lt;- read.table(&quot;subject_train.txt&quot;, col.names=&quot;subject&quot;)
+    y_train &lt;- read.table(&quot;y_train.txt&quot;, col.names=&quot;activity&quot;)
+
+    #Pull out columns which contain means or standard deviations from test measurements
+    traindata &lt;- X_train[, c(means, stds)]
+
+    #Combine with subject and activity data
+    trainfile &lt;- cbind(subject_train, y_train, traindata)
+</code></pre>
+
+<h3>7) Combine the test and training data into one data frame and add the activity label to the rows</h3>
+
+<pre><code>    setwd(&quot;~/datasciencecoursera/UCI HAR Dataset&quot;)
+    combined &lt;- rbind(testfile, trainfile)
+    final &lt;- merge(combined, labels)
+</code></pre>
+
+<h3>8) Create summary data frame by aggregating on subject ID and activity label</h3>
+
+<p>This step calculates the mean of each numeric motion measurement variable and renames the first two columns to be more readable.  Some redundant columns are also removed.</p>
+
+<pre><code>    summary &lt;- aggregate(final, by=list(final$subject, final$activity_label), FUN=mean)
+    names(summary)[names(summary)==&quot;Group.1&quot;] &lt;- &quot;Subject_ID&quot;
+    names(summary)[names(summary)==&quot;Group.2&quot;] &lt;- &quot;Activity_Label&quot;
+    summary$subject &lt;- NULL
+    #The aggregate function returns NA values for this variable so it is removed.
+    summary$activity_label &lt;- NULL
+</code></pre>
+
+<h3>9) Export summary data frame to comma-delimited text file</h3>
+
+<pre><code>    write.csv(summary, file=&quot;project_summary.csv&quot;)
+</code></pre>
+
+<h2>Variables(Columns) in project_summary.csv</h2>
+
+<p>Note:  The first row or record contains column names/headers.  There are 180 observations of 82 variables.</p>
+
+<p>[1] &ldquo;Subject_ID&rdquo; - (integer) Identification code for volunteer subject for each observation.  Ranges from 1 to 30.</p>
+
+<p>[2] &ldquo;Activity_Label&rdquo; - (factor) Description of activity being performed for each observation:
+WALKING
+WALKING_UPSTAIRS
+WALKING_DOWNSTAIRS
+SITTING
+STANDING
+LAYING</p>
+
+<p>[3] &ldquo;activity&rdquo;   - (numeric)  Numeric code corresponding to activity labels (1 through 6).</p>
+
+<p>Columns [4] through [82] are <em>numeric</em> and contain the <strong>group averages</strong> for the motion measurement observations from the original test and training data sets.  Each group is defined as a combination of test subject volunteer and activity.</p>
+
+<p>The meaning of each column or variable is described in the features_info.txt document which came with the original data sets and is reproduced at the end of this code book document.  For example:</p>
+
+<p>[4]&ldquo;tBodyAcc.mean&hellip;X&rdquo;   - refers to the mean of a time-sampled (&ldquo;t&rdquo;) measurement of body acceleration along the X axis (each record contains the group average of this variable for a subject and activity group).</p>
+
+<p>[5] &ldquo;tBodyAcc.mean&hellip;Y&rdquo;<br/>
+[6] &ldquo;tBodyAcc.mean&hellip;Z&rdquo;<br/>
+[7] &ldquo;tGravityAcc.mean&hellip;X&rdquo;<br/>
+[8] &ldquo;tGravityAcc.mean&hellip;Y&rdquo;<br/>
+[9] &ldquo;tGravityAcc.mean&hellip;Z&rdquo;<br/>
+[10] &ldquo;tBodyAccJerk.mean&hellip;X&rdquo;<br/>
+[11] &ldquo;tBodyAccJerk.mean&hellip;Y&rdquo;<br/>
+[12] &ldquo;tBodyAccJerk.mean&hellip;Z&rdquo;<br/>
+[13] &ldquo;tBodyGyro.mean&hellip;X&rdquo;<br/>
+[14] &ldquo;tBodyGyro.mean&hellip;Y&rdquo;<br/>
+[15] &ldquo;tBodyGyro.mean&hellip;Z&rdquo;<br/>
+[16] &ldquo;tBodyGyroJerk.mean&hellip;X&rdquo;<br/>
+[17] &ldquo;tBodyGyroJerk.mean&hellip;Y&rdquo;<br/>
+[18] &ldquo;tBodyGyroJerk.mean&hellip;Z&rdquo;<br/>
+[19] &ldquo;tBodyAccMag.mean..&rdquo;<br/>
+[20] &ldquo;tGravityAccMag.mean..&rdquo;<br/>
+[21] &ldquo;tBodyAccJerkMag.mean..&rdquo;<br/>
+[22] &ldquo;tBodyGyroMag.mean..&rdquo;<br/>
+[23] &ldquo;tBodyGyroJerkMag.mean..&rdquo;<br/>
+[24] &ldquo;fBodyAcc.mean&hellip;X&rdquo;<br/>
+[25] &ldquo;fBodyAcc.mean&hellip;Y&rdquo;<br/>
+[26] &ldquo;fBodyAcc.mean&hellip;Z&rdquo;<br/>
+[27] &ldquo;fBodyAcc.meanFreq&hellip;X&rdquo;<br/>
+[28] &ldquo;fBodyAcc.meanFreq&hellip;Y&rdquo;<br/>
+[29] &ldquo;fBodyAcc.meanFreq&hellip;Z&rdquo;<br/>
+[30] &ldquo;fBodyAccJerk.mean&hellip;X&rdquo;<br/>
+[31] &ldquo;fBodyAccJerk.mean&hellip;Y&rdquo;<br/>
+[32] &ldquo;fBodyAccJerk.mean&hellip;Z&rdquo;<br/>
+[33] &ldquo;fBodyAccJerk.meanFreq&hellip;X&rdquo;<br/>
+[34] &ldquo;fBodyAccJerk.meanFreq&hellip;Y&rdquo;<br/>
+[35] &ldquo;fBodyAccJerk.meanFreq&hellip;Z&rdquo;<br/>
+[36] &ldquo;fBodyGyro.mean&hellip;X&rdquo;<br/>
+[37] &ldquo;fBodyGyro.mean&hellip;Y&rdquo;<br/>
+[38] &ldquo;fBodyGyro.mean&hellip;Z&rdquo;<br/>
+[39] &ldquo;fBodyGyro.meanFreq&hellip;X&rdquo;<br/>
+[40] &ldquo;fBodyGyro.meanFreq&hellip;Y&rdquo;<br/>
+[41] &ldquo;fBodyGyro.meanFreq&hellip;Z&rdquo;<br/>
+[42] &ldquo;fBodyAccMag.mean..&rdquo;<br/>
+[43] &ldquo;fBodyAccMag.meanFreq..&rdquo;<br/>
+[44] &ldquo;fBodyBodyAccJerkMag.mean..&rdquo;<br/>
+[45] &ldquo;fBodyBodyAccJerkMag.meanFreq..&rdquo;<br/>
+[46] &ldquo;fBodyBodyGyroMag.mean..&rdquo;<br/>
+[47] &ldquo;fBodyBodyGyroMag.meanFreq..&rdquo;<br/>
+[48] &ldquo;fBodyBodyGyroJerkMag.mean..&rdquo;<br/>
+[49] &ldquo;fBodyBodyGyroJerkMag.meanFreq..&rdquo;
+[50] &ldquo;tBodyAcc.std&hellip;X&rdquo;<br/>
+[51] &ldquo;tBodyAcc.std&hellip;Y&rdquo;<br/>
+[52]  &ldquo;tBodyAcc.std&hellip;Z&rdquo;<br/>
+[53] &ldquo;tGravityAcc.std&hellip;X&rdquo;<br/>
+[54]  &ldquo;tGravityAcc.std&hellip;Y&rdquo;<br/>
+[55] &ldquo;tGravityAcc.std&hellip;Z&rdquo;<br/>
+[56]  &ldquo;tBodyAccJerk.std&hellip;X&rdquo;<br/>
+[57] &ldquo;tBodyAccJerk.std&hellip;Y&rdquo;<br/>
+[58]  &ldquo;tBodyAccJerk.std&hellip;Z&rdquo;<br/>
+[59] &ldquo;tBodyGyro.std&hellip;X&rdquo;<br/>
+[60]  &ldquo;tBodyGyro.std&hellip;Y&rdquo;<br/>
+[61] &ldquo;tBodyGyro.std&hellip;Z&rdquo;<br/>
+[62]  &ldquo;tBodyGyroJerk.std&hellip;X&rdquo;<br/>
+[63] &ldquo;tBodyGyroJerk.std&hellip;Y&rdquo;<br/>
+[64]  &ldquo;tBodyGyroJerk.std&hellip;Z&rdquo;<br/>
+[65] &ldquo;tBodyAccMag.std..&rdquo;<br/>
+[66]  &ldquo;tGravityAccMag.std..&rdquo;<br/>
+[67] &ldquo;tBodyAccJerkMag.std..&rdquo;<br/>
+[68]  &ldquo;tBodyGyroMag.std..&rdquo;<br/>
+[69] &ldquo;tBodyGyroJerkMag.std..&rdquo;<br/>
+[70]  &ldquo;fBodyAcc.std&hellip;X&rdquo;<br/>
+[71] &ldquo;fBodyAcc.std&hellip;Y&rdquo;<br/>
+[72]  &ldquo;fBodyAcc.std&hellip;Z&rdquo;<br/>
+[73] &ldquo;fBodyAccJerk.std&hellip;X&rdquo;<br/>
+[74]  &ldquo;fBodyAccJerk.std&hellip;Y&rdquo;<br/>
+[75] &ldquo;fBodyAccJerk.std&hellip;Z&rdquo;<br/>
+[76]  &ldquo;fBodyGyro.std&hellip;X&rdquo;<br/>
+[77] &ldquo;fBodyGyro.std&hellip;Y&rdquo;<br/>
+[78]  &ldquo;fBodyGyro.std&hellip;Z&rdquo;<br/>
+[79] &ldquo;fBodyAccMag.std..&rdquo;<br/>
+[80]  &ldquo;fBodyBodyAccJerkMag.std..&rdquo;<br/>
+[81] &ldquo;fBodyBodyGyroMag.std..&rdquo;<br/>
+[82] &ldquo;fBodyBodyGyroJerkMag.std..&rdquo;</p>
+
+<h2>Appendix: Information on &ldquo;Features&rdquo; from Original Data Set</h2>
+
+<h1>Feature Selection </h1>
+
+<blockquote>
+<p>The features selected for this database come from the accelerometer and gyroscope 3-axial raw signals tAcc-XYZ and tGyro-XYZ. These time domain signals (prefix &#39;t&#39; to denote time) were captured at a constant rate of 50 Hz. Then they were filtered using a median filter and a 3rd order low pass Butterworth filter with a corner frequency of 20 Hz to remove noise. Similarly, the acceleration signal was then separated into body and gravity acceleration signals (tBodyAcc-XYZ and tGravityAcc-XYZ) using another low pass Butterworth filter with a corner frequency of 0.3 Hz. </p>
+
+<p>Subsequently, the body linear acceleration and angular velocity were derived in time to obtain Jerk signals (tBodyAccJerk-XYZ and tBodyGyroJerk-XYZ). Also the magnitude of these three-dimensional signals were calculated using the Euclidean norm (tBodyAccMag, tGravityAccMag, tBodyAccJerkMag, tBodyGyroMag, tBodyGyroJerkMag). </p>
+
+<p>Finally a Fast Fourier Transform (FFT) was applied to some of these signals producing fBodyAcc-XYZ, fBodyAccJerk-XYZ, fBodyGyro-XYZ, fBodyAccJerkMag, fBodyGyroMag, fBodyGyroJerkMag. (Note the &#39;f&#39; to indicate frequency domain signals). </p>
+
+<p>These signals were used to estimate variables of the feature vector for each pattern:<br/>
+&#39;-XYZ&#39; is used to denote 3-axial signals in the X, Y and Z directions.</p>
+
+<p>tBodyAcc-XYZ</p>
+
+<p>tGravityAcc-XYZ</p>
+
+<p>tBodyAccJerk-XYZ</p>
+
+<p>tBodyGyro-XYZ</p>
+
+<p>tBodyGyroJerk-XYZ</p>
+
+<p>tBodyAccMag</p>
+
+<p>tGravityAccMag</p>
+
+<p>tBodyAccJerkMag</p>
+
+<p>tBodyGyroMag</p>
+
+<p>tBodyGyroJerkMag</p>
+
+<p>fBodyAcc-XYZ</p>
+
+<p>fBodyAccJerk-XYZ</p>
+
+<p>fBodyGyro-XYZ</p>
+
+<p>fBodyAccMag</p>
+
+<p>fBodyAccJerkMag</p>
+
+<p>fBodyGyroMag</p>
+
+<p>fBodyGyroJerkMag</p>
+
+<p>The set of variables that were estimated from these signals are: </p>
+
+<p>mean(): Mean value</p>
+
+<p>std(): Standard deviation</p>
+
+<p>mad(): Median absolute deviation</p>
+
+<p>max(): Largest value in array</p>
+
+<p>min(): Smallest value in array</p>
+
+<p>sma(): Signal magnitude area</p>
+
+<p>energy(): Energy measure. Sum of the squares divided by the number of values. </p>
+
+<p>iqr(): Interquartile range </p>
+
+<p>entropy(): Signal entropy</p>
+
+<p>arCoeff(): Autorregresion coefficients with Burg order equal to 4</p>
+
+<p>correlation(): correlation coefficient between two signals</p>
+
+<p>maxInds(): index of the frequency component with largest magnitude</p>
+
+<p>meanFreq(): Weighted average of the frequency components to obtain a mean frequency</p>
+
+<p>skewness(): skewness of the frequency domain signal </p>
+
+<p>kurtosis(): kurtosis of the frequency domain signal </p>
+
+<p>bandsEnergy(): Energy of a frequency interval within the 64 bins of the FFT of each window.
+angle(): Angle between to vectors.</p>
+
+<p>Additional vectors obtained by averaging the signals in a signal window sample. These are &gt;used on the angle() variable:</p>
+
+<p>gravityMean</p>
+
+<p>tBodyAccMean</p>
+
+<p>tBodyAccJerkMean</p>
+
+<p>tBodyGyroMean</p>
+
+<p>tBodyGyroJerkMean</p>
+</blockquote>
+
+<p>Note:  The characters &ldquo;()&rdquo; and &ldquo;:&rdquo; were changed to &ldquo;.&rdquo; for use in R in the project_summary data file.</p>
+
+</body>
+
+</html>
+
